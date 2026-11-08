@@ -3,10 +3,10 @@
 A lightweight, high-performance Snake game built with pure HTML5 Canvas, CSS, and JavaScript. Written in a single file with zero external dependencies or assets.
 
 ### How to Play
-* Use the **Arrow Keys** or **W, A, S, D** to control the snake (or swipe on mobile devices).
-* Eat the red food to grow and increase your score.
-* Going through the walls will teleport you to the opposite side.
-* Hitting your own tail resets the game to the starting size.
+- Use the **Arrow Keys** or **W, A, S, D** to control the snake (or swipe on mobile devices).
+- Eat the red food to grow and increase your score.
+- Going through the walls will teleport you to the opposite side.
+- Hitting your own tail resets the game to the starting size.
 
 ### Play Online
 You can play the game instantly in your browser via [GitHub Pages](https://l0veedev.github.io/html-snake-game/).
@@ -15,7 +15,7 @@ You can play the game instantly in your browser via [GitHub Pages](https://l0vee
 
 ### Source Code (`index.html`)
 
-````html
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -154,3 +154,6 @@ You can play the game instantly in your browser via [GitHub Pages](https://l0vee
 
         let touchStartX = 0;
         let touchStartY = 0;
+    </script>
+</body>
+</html>
