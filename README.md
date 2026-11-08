@@ -21,28 +21,57 @@ You can play the game instantly in your browser via [GitHub Pages](https://l0vee
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Snake Game</title>
+    <title>HTML Snake Game — Play Online | l0veedev</title>
+    <meta name="description" content="A lightweight, high-performance open-source Snake game built with pure HTML5 Canvas and JavaScript. Play online for free, customize, and leave comments!">
+    <meta name="keywords" content="html snake game, javascript snake, retro game, indie pet project, l0veedev">
+    <meta name="author" content="l0veedev">
     <style>
         body {
             margin: 0;
+            padding: 40px 20px;
             background: #0d0d0d;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
+            box-sizing: border-box;
             outline: none;
-            touch-action: none;
         }
         canvas {
             background: #1a1a1a;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
             border-radius: 4px;
             cursor: pointer;
+            margin-bottom: 40px;
+            touch-action: none;
+        }
+        .comments-container {
+            width: 100%;
+            max-width: 600px;
         }
     </style>
 </head>
 <body>
     <canvas id="board" width="400" height="400"></canvas>
+
+    <div class="comments-container">
+        <script src="[https://giscus.app/client.js](https://giscus.app/client.js)"
+                data-repo="l0veedev/html-snake-game"
+                data-repo-id="R_kgDOVnXJAA"
+                data-category="Announcements"
+                data-category-id="DIC_kwDOVnXJAM4DKrfR"
+                data-mapping="pathname"
+                data-strict="0"
+                data-reactions-enabled="1"
+                data-emit-metadata="0"
+                data-input-position="bottom"
+                data-theme="dark"
+                data-lang="ru"
+                crossorigin="anonymous"
+                async>
+        </script>
+    </div>
+
     <script>
         const canvas = document.getElementById('board');
         const ctx = canvas.getContext('2d');
@@ -141,6 +170,8 @@ You can play the game instantly in your browser via [GitHub Pages](https://l0vee
         }
 
         function handleInput(event) {
+            if (document.activeElement && document.activeElement.tagName === 'IFRAME') return;
+
             const key = event.key.toLowerCase();
             if (['arrowup', 'arrowdown', 'arrowleft', 'arrowright', 'w', 'a', 's', 'd'].includes(key)) {
                 event.preventDefault();
@@ -154,6 +185,35 @@ You can play the game instantly in your browser via [GitHub Pages](https://l0vee
 
         let touchStartX = 0;
         let touchStartY = 0;
+
+        canvas.addEventListener('touchstart', e => {
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+        }, { passive: true });
+
+        canvas.addEventListener('touchend', e => {
+            if (!touchStartX || !touchStartY) return;
+            let touchEndX = e.changedTouches[0].clientX;
+            let touchEndY = e.changedTouches[0].clientY;
+
+            let diffX = touchEndX - touchStartX;
+            let diffY = touchEndY - touchStartY;
+
+            if (Math.abs(diffX) > Math.abs(diffY)) {
+                if (diffX > 30) changeDirection(size, 0);
+                else if (diffX < -30) changeDirection(-size, 0);
+            } else {
+                if (diffY > 30) changeDirection(0, size);
+                else if (diffY < -30) changeDirection(0, -size);
+            }
+            touchStartX = 0;
+            touchStartY = 0;
+        }, { passive: true });
+
+        window.addEventListener('keydown', handleInput);
+        window.focus();
+        initGame();
+        gameLoop();
     </script>
 </body>
 </html>
