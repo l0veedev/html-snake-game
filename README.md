@@ -20,6 +20,7 @@ You can play the game instantly in your browser via [GitHub Pages](https://l0vee
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Snake Game</title>
     <style>
         body {
@@ -29,11 +30,14 @@ You can play the game instantly in your browser via [GitHub Pages](https://l0vee
             justify-content: center;
             align-items: center;
             height: 100vh;
+            outline: none;
+            touch-action: none;
         }
         canvas {
             background: #1a1a1a;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
             border-radius: 4px;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -90,20 +94,63 @@ You can play the game instantly in your browser via [GitHub Pages](https://l0vee
 
         function drawSnake() {
             snake.forEach((part, index) => {
-                ctx.fillStyle = index === 0 ? '#4CAF5
+                ctx.fillStyle = index === 0 ? '#4CAF50' : '#81C784';
+                ctx.fillRect(part.x, part.y, size - 2, size - 2);
+            });
+        }
 
-<script src="https://giscus.app/client.js"
-        data-repo="l0veedev/html-snake-game"
-        data-repo-id="R_kgDOVnXJAA"
-        data-category="Announcements"
-        data-category-id="DIC_kwDOVnXJAM4DKrfR"
-        data-mapping="pathname"
-        data-strict="0"
-        data-reactions-enabled="1"
-        data-emit-metadata="0"
-        data-input-position="bottom"
-        data-theme="preferred_color_scheme"
-        data-lang="ru"
-        crossorigin="anonymous"
-        async>
-</script>
+        function advanceSnake() {
+            const head = { x: snake[0].x + dx, y: snake[0].y + dy };
+
+            if (head.x < 0) head.x = canvas.width - size;
+            else if (head.x >= canvas.width) head.x = 0;
+
+            if (head.y < 0) head.y = canvas.height - size;
+            else if (head.y >= canvas.height) head.y = 0;
+
+            for (let i = 1; i < snake.length; i++) {
+                if (head.x === snake[i].x && head.y === snake[i].y) {
+                    initGame();
+                    return;
+                }
+            }
+
+            snake.unshift(head);
+
+            if (head.x === food.x && head.y === food.y) {
+                spawnFood();
+            } else {
+                snake.pop();
+            }
+        }
+
+        function changeDirection(newDx, newDy) {
+            if (lockDirection) return;
+            if (newDx === -dx && newDy === -dy) return;
+            
+            if (newDx !== 0 && dx === 0) {
+                dx = newDx;
+                dy = 0;
+                lockDirection = true;
+            }
+            if (newDy !== 0 && dy === 0) {
+                dx = 0;
+                dy = newDy;
+                lockDirection = true;
+            }
+        }
+
+        function handleInput(event) {
+            const key = event.key.toLowerCase();
+            if (['arrowup', 'arrowdown', 'arrowleft', 'arrowright', 'w', 'a', 's', 'd'].includes(key)) {
+                event.preventDefault();
+            }
+
+            if (key === 'arrowleft' || key === 'a') changeDirection(-size, 0);
+            if (key === 'arrowup' || key === 'w') changeDirection(0, -size);
+            if (key === 'arrowright' || key === 'd') changeDirection(size, 0);
+            if (key === 'arrowdown' || key === 's') changeDirection(0, size);
+        }
+
+        let touchStartX = 0;
+        let touchStartY = 0;
