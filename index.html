@@ -11,11 +11,13 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
+            outline: none;
         }
         canvas {
             background: #1a1a1a;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
             border-radius: 4px;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -103,8 +105,13 @@
         }
 
         function handleInput(event) {
-            if (lockDirection) return;
             const key = event.key.toLowerCase();
+            
+            if (['arrowup', 'arrowdown', 'arrowleft', 'arrowright', 'w', 'a', 's', 'd'].includes(key)) {
+                event.preventDefault();
+            }
+
+            if (lockDirection) return;
 
             if ((key === 'arrowleft' || key === 'a') && dx === 0) {
                 dx = -size;
@@ -128,7 +135,8 @@
             }
         }
 
-        document.addEventListener('keydown', handleInput);
+        window.addEventListener('keydown', handleInput);
+        window.focus();
         initGame();
         gameLoop();
     </script>
